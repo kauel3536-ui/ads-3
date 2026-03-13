@@ -1,0 +1,390 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <conio.h>
+#include <windows.h>
+#include <time.h>
+
+#define WIDTH 60
+#define HEIGHT 22
+#define TOP_OFFSET 2
+#define SPEED 140
+#define FRUIT_COUNT 5
+
+/* ================= HASH TABLE ================= */
+#define TABLE_SIZE (WIDTH * HEIGHT)
+
+int occupancyHash[TABLE_SIZE] = {0};
+
+int get_hash_index(int x, int y) {
+    return (y * WIDTH) + x;
+}
+
+/* ================= ESTRUTURAS ================= */
+typedef struct Node {
+    int x;
+    int y;
+    struct Node *next;
+    struct Node *prev;
+} Node;
+
+typedef struct {
+    int x;
+    int y;
+} Fruit;
+
+Node *head = NULL;
+Node *tail = NULL;
+Fruit fruits[FRUIT_COUNT];
+
+int dirX = 0;
+int dirY = 0;
+int score = 0;
+int gameOver = 0;
+
+HANDLE hConsole;
+
+/* ================= FUNÇÕES UTILITÁRIAS ================= */
+
+// Função para mudar a cor do texto
+void setColor(int color) {
+    SetConsoleTextAttribute(hConsole, color);
+}
+
+// Função para mover o cursor no console
+void gotoxy(int x, int y) {
+    COORD coord = {x, y};
+    SetConsoleCursorPosition(hConsole, coord);
+}
+
+// Função para esconder o cursor
+void hideCursor() {
+    CONSOLE_CURSOR_INFO ci;
+    ci.dwSize = 1;
+    ci.bVisible = FALSE;
+    SetConsoleCursorInfo(hConsole, &ci);
+}
+
+/* ================= FUNÇÕES DA COBRA ================= */
+
+// Função para inserir um novo nó na cabeça da cobra
+void insert_head(int x, int y) {
+    Node *newNode = (Node*)malloc(sizeof(Node));
+    if (newNode == NULL) {
+        gameOver = 1;
+        return;
+    }
+
+    newNode->x = x;
+    newNode->y = y;
+    newNode->next = head;
+    newNode->prev = NULL;
+
+    if (head != NULL)
+        head->prev = newNode;
+
+    head = newNode;
+
+    if (tail == NULL)
+        tail = newNode;
+
+    occupancyHash[get_hash_index(x, y)] = 1;
+}
+
+// Função para remover a cauda da cobra
+void remove_tail() {
+    if (tail == NULL)
+        return;
+
+    occupancyHash[get_hash_index(tail->x, tail->y)] = 0;
+
+    Node *temp = tail;
+
+    if (tail->prev != NULL) {
+        tail = tail->prev;
+        tail->next = NULL;
+    } else {
+        head = NULL;
+        tail = NULL;
+    }
+
+    gotoxy(temp->x, temp->y);
+    printf(" ");
+    free(temp);
+}
+
+// Função para atualizar o estado do jogo a cada ciclo
+void update() {
+    if (dirX == 0 && dirY == 0)
+        return;
+
+    int newX = head->x + dirX;
+    int newY = head->y + dirY;
+
+    // Verifica se colidiu com a parede
+    if (collision_wall(newX, newY)) {
+        gameOver = 1;
+        return;
+    }
+
+    int fruitIndex = fruit_at(newX, newY);
+    int ateFruit = (fruitIndex != -1);
+
+    // Se não comer a fruta, a cobra pode entrar na posição da cauda
+    if (!ateFruit && tail != NULL && newX == tail->x && newY == tail->y) {
+        /* permitido */
+    } else if (collision_body(newX, newY)) {
+        gameOver = 1;
+        return;
+    }
+
+    setColor(2);
+    gotoxy(head->x, head->y);
+    printf("o");
+
+    insert_head(newX, newY);
+
+    setColor(10);
+    gotoxy(newX, newY);
+    printf("O");
+    setColor(7);
+
+    if (ateFruit) {
+        score += 10;
+        generate_fruit(fruitIndex);
+    } else {
+        remove_tail();
+    }
+
+    gotoxy(0, 0);
+    setColor(14);
+    printf("SCORE: %d   ", score);
+    setColor(7);
+}
+
+// Função para capturar a entrada do teclado
+void input() {
+    if (_kbhit()) {
+        int key = _getch();
+
+        // Movimentos com as setas do teclado
+        if (key == 0 || key == 224) {
+            key = _getch();
+
+            switch (key) {
+                case 75: /* esquerda */
+                    if (dirX != 1) {
+                        dirX = -1;
+                        dirY = 0;
+                    }
+                    break;
+
+                case 77: /* direita */
+                    if (dirX != -1) {
+                        dirX = 1;
+                        dirY = 0;
+                    }
+                    break;
+
+                case 72: /* cima */
+                    if (dirY != 1) {
+                        dirX = 0;
+                        dirY = -1;
+                    }
+                    break;
+
+                case 80: /* baixo */
+                    if (dirY != -1) {
+                        dirX = 0;
+                        dirY = 1;
+                    }
+                    break;
+            }
+        } else {
+            // Movimentos com WASD
+            switch (key) {
+                case 'a':
+                case 'A':
+                    if (dirX != 1) {
+                        dirX = -1;
+                        dirY = 0;
+                    }
+                    break;
+
+                case 'd':
+                case 'D':
+                    if (dirX != -1) {
+                        dirX = 1;
+                        dirY = 0;
+                    }
+                    break;
+
+                case 'w':
+                case 'W':
+                    if (dirY != 1) {
+                        dirX = 0;
+                        dirY = -1;
+                    }
+                    break;
+
+                case 's':
+                case 'S':
+                    if (dirY != -1) {
+                        dirX = 0;
+                        dirY = 1;
+                    }
+                    break;
+            }
+        }
+    }
+}
+
+/* ================= FUNÇÕES DE COLISÃO ================= */
+
+// Função para verificar colisão com a parede
+int collision_wall(int x, int y) {
+    if (x <= 0 || x >= WIDTH - 1 || y <= TOP_OFFSET || y >= HEIGHT - 1)
+        return 1;
+    return 0;
+}
+
+// Função para verificar colisão com o corpo da cobra
+int collision_body(int x, int y) {
+    if (occupancyHash[get_hash_index(x, y)] == 1)
+        return 1;
+    return 0;
+}
+
+// Função para verificar se existe uma fruta na posição (x, y)
+int fruit_at(int x, int y) {
+    for (int i = 0; i < FRUIT_COUNT; i++) {
+        if (fruits[i].x == x && fruits[i].y == y)
+            return i;
+    }
+    return -1;
+}
+
+/* ================= FUNÇÕES DE DESENHO ================= */
+
+// Função para desenhar a borda do campo
+void draw_border() {
+    setColor(9);
+
+    for (int i = 0; i < WIDTH; i++) {
+        gotoxy(i, TOP_OFFSET);
+        printf("#");
+        gotoxy(i, HEIGHT - 1);
+        printf("#");
+    }
+
+    for (int i = TOP_OFFSET; i < HEIGHT; i++) {
+        gotoxy(0, i);
+        printf("#");
+        gotoxy(WIDTH - 1, i);
+        printf("#");
+    }
+
+    setColor(7);
+}
+
+// Função para gerar uma fruta em uma posição aleatória
+void generate_fruit(int index) {
+    int x, y, valid;
+
+    do {
+        valid = 1;
+        x = rand() % (WIDTH - 2) + 1;
+        y = rand() % (HEIGHT - TOP_OFFSET - 2) + TOP_OFFSET + 1;
+
+        if (occupancyHash[get_hash_index(x, y)] == 1)
+            valid = 0;
+
+        for (int i = 0; i < FRUIT_COUNT; i++) {
+            if (i != index && fruits[i].x == x && fruits[i].y == y) {
+                valid = 0;
+                break;
+            }
+        }
+    } while (!valid);
+
+    fruits[index].x = x;
+    fruits[index].y = y;
+
+    setColor(12);
+    gotoxy(x, y);
+    printf("@");
+    setColor(7);
+}
+
+/* ================= FUNÇÃO GAME OVER ================= */
+
+// Função para exibir a tela de Game Over
+void game_over_screen() {
+    system("cls");
+
+    // Desenha uma borda estilizada
+    setColor(12);
+    for (int i = 0; i < WIDTH; i++) {
+        gotoxy(i, HEIGHT / 2 - 4);
+        printf("#");
+        gotoxy(i, HEIGHT / 2 + 4);
+        printf("#");
+    }
+    for (int i = HEIGHT / 2 - 4; i <= HEIGHT / 2 + 4; i++) {
+        gotoxy(0, i);
+        printf("#");
+        gotoxy(WIDTH - 1, i);
+        printf("#");
+    }
+
+    // Mensagem "Game Over"
+    setColor(14);
+    gotoxy(WIDTH / 2 - 6, HEIGHT / 2 - 3);
+    printf("GAME OVER!");
+    setColor(7);
+
+    // Exibe a pontuação final
+    setColor(10);
+    gotoxy(WIDTH / 2 - 7, HEIGHT / 2);
+    printf("Score: %d", score);
+
+    // Exibe as opções para reiniciar ou sair
+    setColor(13);
+    gotoxy(WIDTH / 2 - 10, HEIGHT / 2 + 2);
+    printf("Press R to Restart or Q to Quit");
+    setColor(7);
+}
+
+/* ================= FUNÇÃO PRINCIPAL ================= */
+
+// Função principal que inicia o jogo
+int main() {
+    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    srand((unsigned int)time(NULL));
+    hideCursor();
+    system("cls");
+
+    draw_border();
+
+    int startX = WIDTH / 2;
+    int startY = HEIGHT / 2;
+
+    insert_head(startX, startY);
+
+    setColor(10);
+    gotoxy(startX, startY);
+    printf("O");
+    setColor(7);
+
+    for (int i = 0; i < FRUIT_COUNT; i++)
+        generate_fruit(i);
+
+    while (!gameOver) {
+        input();
+        update();
+        Sleep(SPEED);
+    }
+
+    game_over_screen();  // Exibe a tela de Game Over
+
+    return 0;
+}
