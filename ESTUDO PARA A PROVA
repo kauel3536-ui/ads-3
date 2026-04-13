@@ -1,0 +1,220 @@
+RESUMÃO EXPLICADO (por tópicos)
+🔹 1. Classe x Objeto
+Classe = modelo (ex: “Carro”)
+Objeto = instância (ex: “meu carro vermelho”)
+Chamamos de molde porque a classe define como os objetos serão criados.
+🔹 2. Encapsulamento
+Esconder dados internos do objeto.
+Usar:
+private → só a própria classe acessa
+protected → classe + subclasses
+public → qualquer um acessa
+👉 Protege o estado do objeto contra alterações indevidas.
+🔹 3. Identidade x Estado
+Identidade = quem é o objeto (ID único)
+Estado = valores dos atributos (nome, idade, etc.)
+🔹 4. Atributos x Métodos
+Atributos = características (dados)
+Métodos = ações (comportamentos)
+👉 Juntos definem a responsabilidade da classe.
+🔹 5. Destruição de objeto
+Quando destruído → dados somem da memória
+👉 Sem persistência, os dados são perdidos.
+🔹 6. Classe UML (desenho)
+
+Você deve desenhar assim:
+
+Classe Veiculo
+------------------
+- cor
+- placa
+- velocidade
+------------------
++ acelerar()
++ frear()
+# calcularConsumo()
++ público
+- privado
+# protegido
+🔹 7. Atributo derivado
+Calculado com base em outros (ex: idade a partir da data de nascimento)
+UML: começa com /
+👉 /idade
+🔹 8. Assinatura de método
+Nome + parâmetros + tipo de retorno
+👉 Deve ser única para evitar conflito (mesmo com sobrecarga).
+🔹 9. Visibilidade
+Controla quem pode acessar o quê
+👉 Importante para segurança e organização.
+🔹 10. UML não é metodologia
+UML = linguagem visual
+Não define “como desenvolver”, só “como representar”.
+🔹 11. Multiplicidade (médico x paciente)
+Médico atende vários pacientes → 1..*
+Paciente pode ter vários médicos → 1..*
+👉 Relação muitos-para-muitos
+🔹 12. 0..* vs 1..*
+0..* → pode não ter nenhum
+1..* → tem pelo menos 1
+👉 Ex: Cliente pode ter 0 pedidos.
+🔹 13. Papel (Role)
+Nome da função na relação
+👉 Ex: professor / aluno
+👉 Usado quando pode gerar dúvida.
+🔹 14. 1 para 0..1
+Pode ter 1 ou nenhum
+👉 Ex: Pessoa pode ter ou não passaporte.
+🔹 15. Multiplicidade nos dois lados
+Define quantos objetos se relacionam em cada ponta
+👉 Ex: 1 professor → muitos alunos
+🔹 16. Associação Reflexiva
+Classe ligada a ela mesma
+👉 Ex: funcionário gerencia funcionário
+🔹 17. Associação x Agregação
+Associação = relação simples
+Agregação = “tem um” (mais fraca)
+🔹 18. Composição
+Relação forte (dependência total)
+Se o todo morre → partes também
+👉 Ex: casa e quartos
+🔹 19. Generalização (Herança)
+Relação “É UM”
+👉 Ex: cachorro é um animal
+🔹 20. Liskov (SUPER IMPORTANTE)
+
+👉 Subclasse deve funcionar no lugar da classe pai sem quebrar nada.
+
+🔹 21. Agregação vs Composição
+Agregação: parte pode existir sozinha
+Composição: parte depende do todo
+👉 Mouse (agregação) vs Processador (composição)
+🔹 22. Classe Abstrata
+Não pode ser instanciada
+👉 Serve como base para outras classes
+🔹 23. Herança e DRY
+Evita repetir código
+👉 Reutiliza atributos e métodos
+🔹 24. Multiplicidade na composição
+O “todo” pode ter vários elementos (*)
+👉 Ex: Pedido tem vários itens
+🔥 QUESTÃO 25 (CAI MUITO EM PROVA)
+
+Você precisa montar um diagrama de classes com:
+
+Classes principais:
+Produto
+Categoria
+Almoxarifado
+Movimentacao
+Funcionario
+Gerente
+Operador
+🔗 Relacionamentos:
+Produto → Categoria
+👉 muitos produtos para 1 categoria
+Produto ↔ Almoxarifado
+👉 muitos-para-muitos (com quantidade!)
+Movimentacao:
+ligada a Produto
+feita por Funcionário
+Funcionário:
+herança → Gerente e Operador
+Gerente:
+👉 aprova movimentação
+⚠️ Dica de ouro:
+Use classe associativa para quantidade no estoque
+👉 algo como Estoque (Produto + Almoxarifado + quantidade)
+📌 DICAS PRA PROVA
+Decore:
++ - #
+0..*, 1..*, 0..1
+Saiba diferenciar:
+Associação x Agregação x Composição
+Entenda bem:
+Herança
+Encapsulamento
+Multiplicidade
+_________________________________
+UML & ORIENTAÇÃO A OBJETOS
+│
+├── 🧩 CLASSE vs OBJETO
+│   ├─ Classe = molde
+│   └─ Objeto = instância
+│
+├── 🔒 ENCAPSULAMENTO
+│   ├─ private (-)
+│   ├─ protected (#)
+│   └─ public (+)
+│   → protege dados
+│
+├── 🆔 IDENTIDADE x ESTADO
+│   ├─ Identidade = único
+│   └─ Estado = valores dos atributos
+│
+├── ⚙️ ATRIBUTOS & MÉTODOS
+│   ├─ Atributos = dados
+│   └─ Métodos = ações
+│
+├── 📦 VISIBILIDADE
+│   └─ controla acesso entre classes
+│
+├── 🧮 ATRIBUTO DERIVADO
+│   └─ começa com "/" (ex: /idade)
+│
+├── 🔤 ASSINATURA DE MÉTODO
+│   └─ nome + parâmetros + retorno
+│
+├── 📊 MULTIPLICIDADE
+│   ├─ 0..1 → opcional
+│   ├─ 1 → obrigatório
+│   ├─ 0..* → nenhum ou muitos
+│   └─ 1..* → pelo menos um
+│
+├── 🔗 ASSOCIAÇÕES
+│   ├─ Associação (simples)
+│   ├─ Agregação (fraca)
+│   └─ Composição (forte)
+│       └─ depende do todo
+│
+├── 🔁 ASSOCIAÇÃO REFLEXIVA
+│   └─ classe ligada a si mesma
+│
+├── 🧬 HERANÇA (GENERALIZAÇÃO)
+│   ├─ "É UM"
+│   └─ reutilização de código
+│
+├── ⚠️ LISKOV
+│   └─ subclasse substitui a superclasse
+│
+├── 🚫 CLASSE ABSTRATA
+│   └─ não pode instanciar
+│
+└── 📐 UML
+    └─ linguagem visual (não é método)
+___________________________________
+SISTEMA DE ESTOQUE
+│
+├── Produto
+│   └─ pertence a → Categoria (1)
+│
+├── Categoria
+│   └─ tem → vários Produtos
+│
+├── Almoxarifado
+│   └─ tem → vários Produtos
+│
+├── Estoque (classe associativa)
+│   ├─ Produto
+│   ├─ Almoxarifado
+│   └─ quantidade
+│
+├── Movimentação
+│   ├─ Produto
+│   └─ Funcionário
+│
+├── Funcionário
+│   ├─ Gerente
+│   └─ Operador
+│
+└── Gerente
+    └─ aprova movimentações
