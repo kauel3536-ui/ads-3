@@ -1,220 +1,253 @@
-RESUMÃO EXPLICADO (por tópicos)
-🔹 1. Classe x Objeto
-Classe = modelo (ex: “Carro”)
-Objeto = instância (ex: “meu carro vermelho”)
-Chamamos de molde porque a classe define como os objetos serão criados.
-🔹 2. Encapsulamento
-Esconder dados internos do objeto.
-Usar:
-private → só a própria classe acessa
-protected → classe + subclasses
-public → qualquer um acessa
-👉 Protege o estado do objeto contra alterações indevidas.
-🔹 3. Identidade x Estado
-Identidade = quem é o objeto (ID único)
-Estado = valores dos atributos (nome, idade, etc.)
-🔹 4. Atributos x Métodos
-Atributos = características (dados)
-Métodos = ações (comportamentos)
-👉 Juntos definem a responsabilidade da classe.
-🔹 5. Destruição de objeto
-Quando destruído → dados somem da memória
-👉 Sem persistência, os dados são perdidos.
-🔹 6. Classe UML (desenho)
+b) Direção de inserção
 
-Você deve desenhar assim:
+👉 Valores maiores que root->score vão para a direita.
+✔️ Porque na BST:
 
-Classe Veiculo
-------------------
-- cor
-- placa
-- velocidade
-------------------
-+ acelerar()
-+ frear()
-# calcularConsumo()
-+ público
-- privado
-# protegido
-🔹 7. Atributo derivado
-Calculado com base em outros (ex: idade a partir da data de nascimento)
-UML: começa com /
-👉 /idade
-🔹 8. Assinatura de método
-Nome + parâmetros + tipo de retorno
-👉 Deve ser única para evitar conflito (mesmo com sobrecarga).
-🔹 9. Visibilidade
-Controla quem pode acessar o quê
-👉 Importante para segurança e organização.
-🔹 10. UML não é metodologia
-UML = linguagem visual
-Não define “como desenvolver”, só “como representar”.
-🔹 11. Multiplicidade (médico x paciente)
-Médico atende vários pacientes → 1..*
-Paciente pode ter vários médicos → 1..*
-👉 Relação muitos-para-muitos
-🔹 12. 0..* vs 1..*
-0..* → pode não ter nenhum
-1..* → tem pelo menos 1
-👉 Ex: Cliente pode ter 0 pedidos.
-🔹 13. Papel (Role)
-Nome da função na relação
-👉 Ex: professor / aluno
-👉 Usado quando pode gerar dúvida.
-🔹 14. 1 para 0..1
-Pode ter 1 ou nenhum
-👉 Ex: Pessoa pode ter ou não passaporte.
-🔹 15. Multiplicidade nos dois lados
-Define quantos objetos se relacionam em cada ponta
-👉 Ex: 1 professor → muitos alunos
-🔹 16. Associação Reflexiva
-Classe ligada a ela mesma
-👉 Ex: funcionário gerencia funcionário
-🔹 17. Associação x Agregação
-Associação = relação simples
-Agregação = “tem um” (mais fraca)
-🔹 18. Composição
-Relação forte (dependência total)
-Se o todo morre → partes também
-👉 Ex: casa e quartos
-🔹 19. Generalização (Herança)
-Relação “É UM”
-👉 Ex: cachorro é um animal
-🔹 20. Liskov (SUPER IMPORTANTE)
+esquerda → menores
+direita → maiores (ou iguais, dependendo da implementação)
+c) Complexidade da inserção
+🌳 BST balanceada: O(log n)
+🌿 BST degenerada (tipo lista): O(n)
+Questão 5 (Matriz de Adjacência)
+a) Matriz 5x5
 
-👉 Subclasse deve funcionar no lugar da classe pai sem quebrar nada.
+Arestas: (0–1), (0–2), (1–3), (2–3), (3–4)
 
-🔹 21. Agregação vs Composição
-Agregação: parte pode existir sozinha
-Composição: parte depende do todo
-👉 Mouse (agregação) vs Processador (composição)
-🔹 22. Classe Abstrata
-Não pode ser instanciada
-👉 Serve como base para outras classes
-🔹 23. Herança e DRY
-Evita repetir código
-👉 Reutiliza atributos e métodos
-🔹 24. Multiplicidade na composição
-O “todo” pode ter vários elementos (*)
-👉 Ex: Pedido tem vários itens
-🔥 QUESTÃO 25 (CAI MUITO EM PROVA)
+   0 1 2 3 4
+0 [0 1 1 0 0]
+1 [1 0 0 1 0]
+2 [1 0 0 1 0]
+3 [0 1 1 0 1]
+4 [0 0 0 1 0]
+b) Por que é simétrica?
 
-Você precisa montar um diagrama de classes com:
+✔️ Porque o grafo é não-direcionado:
+Se existe (u, v), então também existe (v, u).
 
-Classes principais:
-Produto
-Categoria
-Almoxarifado
-Movimentacao
-Funcionario
-Gerente
-Operador
-🔗 Relacionamentos:
-Produto → Categoria
-👉 muitos produtos para 1 categoria
-Produto ↔ Almoxarifado
-👉 muitos-para-muitos (com quantidade!)
-Movimentacao:
-ligada a Produto
-feita por Funcionário
-Funcionário:
-herança → Gerente e Operador
-Gerente:
-👉 aprova movimentação
-⚠️ Dica de ouro:
-Use classe associativa para quantidade no estoque
-👉 algo como Estoque (Produto + Almoxarifado + quantidade)
-📌 DICAS PRA PROVA
-Decore:
-+ - #
-0..*, 1..*, 0..1
-Saiba diferenciar:
-Associação x Agregação x Composição
-Entenda bem:
-Herança
-Encapsulamento
-Multiplicidade
-_________________________________
-UML & ORIENTAÇÃO A OBJETOS
-│
-├── 🧩 CLASSE vs OBJETO
-│   ├─ Classe = molde
-│   └─ Objeto = instância
-│
-├── 🔒 ENCAPSULAMENTO
-│   ├─ private (-)
-│   ├─ protected (#)
-│   └─ public (+)
-│   → protege dados
-│
-├── 🆔 IDENTIDADE x ESTADO
-│   ├─ Identidade = único
-│   └─ Estado = valores dos atributos
-│
-├── ⚙️ ATRIBUTOS & MÉTODOS
-│   ├─ Atributos = dados
-│   └─ Métodos = ações
-│
-├── 📦 VISIBILIDADE
-│   └─ controla acesso entre classes
-│
-├── 🧮 ATRIBUTO DERIVADO
-│   └─ começa com "/" (ex: /idade)
-│
-├── 🔤 ASSINATURA DE MÉTODO
-│   └─ nome + parâmetros + retorno
-│
-├── 📊 MULTIPLICIDADE
-│   ├─ 0..1 → opcional
-│   ├─ 1 → obrigatório
-│   ├─ 0..* → nenhum ou muitos
-│   └─ 1..* → pelo menos um
-│
-├── 🔗 ASSOCIAÇÕES
-│   ├─ Associação (simples)
-│   ├─ Agregação (fraca)
-│   └─ Composição (forte)
-│       └─ depende do todo
-│
-├── 🔁 ASSOCIAÇÃO REFLEXIVA
-│   └─ classe ligada a si mesma
-│
-├── 🧬 HERANÇA (GENERALIZAÇÃO)
-│   ├─ "É UM"
-│   └─ reutilização de código
-│
-├── ⚠️ LISKOV
-│   └─ subclasse substitui a superclasse
-│
-├── 🚫 CLASSE ABSTRATA
-│   └─ não pode instanciar
-│
-└── 📐 UML
-    └─ linguagem visual (não é método)
-___________________________________
-SISTEMA DE ESTOQUE
-│
-├── Produto
-│   └─ pertence a → Categoria (1)
-│
-├── Categoria
-│   └─ tem → vários Produtos
-│
-├── Almoxarifado
-│   └─ tem → vários Produtos
-│
-├── Estoque (classe associativa)
-│   ├─ Produto
-│   ├─ Almoxarifado
-│   └─ quantidade
-│
-├── Movimentação
-│   ├─ Produto
-│   └─ Funcionário
-│
-├── Funcionário
-│   ├─ Gerente
-│   └─ Operador
-│
-└── Gerente
-    └─ aprova movimentações
+c) Custo de memória
+Matriz: O(V²)
+Lista: O(V + E)
+
+👉 Lista é melhor quando o grafo é esparso (poucas arestas).
+
+Questão 6 (AVL)
+a) Fator de balanceamento
+
+👉 FB = altura(esquerda) - altura(direita)
+
+b) Rotação (10, 20, 30)
+
+Antes:
+
+10
+  \
+   20
+     \
+      30
+
+Depois da rotação à esquerda:
+
+   20
+  /  \
+10   30
+
+✔️ Nova raiz: 20
+
+c) Quando usar rotação dupla?
+
+👉 Quando o desequilíbrio é:
+
+LR (Esquerda-Direita) ou
+RL (Direita-Esquerda)
+
+✔️ Exemplo:
+
+Inserção: 30, 10, 20 → caso LR
+Questão 7 (BFS e DFS)
+a) Estruturas
+BFS → Fila (Queue)
+DFS → Pilha (Stack) ou recursão
+
+✔️ Influência:
+
+BFS visita por níveis
+DFS vai até o fundo antes de voltar
+b) Por que BFS acha menor caminho?
+
+✔️ Porque explora por níveis → primeiro caminho encontrado é o menor em número de arestas.
+❌ DFS não garante isso porque pode seguir caminhos longos primeiro.
+
+c) Por que Pinky (BFS) é mais eficiente?
+
+✔️ Porque encontra o caminho mais curto rapidamente, cercando o Pac-Man de forma mais direta.
+❌ DFS pode “se perder” explorando caminhos longos.
+
+Se quiser, posso te explicar cada questão passo a passo como se fosse prova 👍
+
+me explicar
+
+Beleza — vou te explicar de forma simples, como se fosse aula, passando por cada questão 👇
+
+📘 Questão 3 – Grafos (ideia principal)
+
+Você precisa saber a diferença entre matriz e lista de adjacência.
+
+👉 Pense assim:
+
+Matriz = tabela grande (gasta muita memória)
+Lista = guarda só o que existe (mais econômica)
+
+✔️ A correta é C porque:
+
+Em grafos com poucas conexões (esparsos), guardar só as arestas economiza memória.
+
+🌳 Questão 4 – Árvore BST
+🔹 Ideia da BST
+
+Sempre segue a regra:
+
+Esquerda → menor
+Direita → maior
+b) Para onde vai valor maior?
+
+👉 Vai para a direita
+
+Porque o código faz:
+
+if (score < root->score)
+    vai pra esquerda
+else
+    vai pra direita
+c) Complexidade
+
+👉 Depende do formato da árvore:
+
+🌳 Balanceada → rápida → O(log n)
+🌿 Desbalanceada (tipo lista) → lenta → O(n)
+
+💡 Imagine:
+
+Árvore organizada = busca rápida
+Árvore torta = vira uma lista
+📊 Questão 5 – Matriz de Adjacência
+a) Como montar
+
+Você marca 1 quando tem ligação.
+
+Exemplo:
+
+(0–1) → linha 0 coluna 1 = 1
+(1–0) também = 1 (porque não é direcionado)
+
+✔️ Resultado:
+
+   0 1 2 3 4
+0 [0 1 1 0 0]
+1 [1 0 0 1 0]
+2 [1 0 0 1 0]
+3 [0 1 1 0 1]
+4 [0 0 0 1 0]
+b) Por que é simétrica?
+
+👉 Porque ida = volta
+Se existe A → B, então existe B → A
+
+c) Memória
+Matriz → O(V²) (grande)
+Lista → O(V + E) (menor)
+
+✔️ Lista é melhor quando tem poucas conexões.
+
+🌲 Questão 6 – AVL (árvore balanceada)
+a) Fator de balanceamento
+
+👉 Fórmula:
+
+FB = altura esquerda - altura direita
+b) Rotação (10, 20, 30)
+
+Antes (desbalanceada):
+
+10
+  \
+   20
+     \
+      30
+
+Problema: tudo foi pra direita 😅
+
+👉 Corrige com rotação:
+
+Depois:
+
+   20
+  /  \
+10   30
+
+✔️ Nova raiz = 20
+
+c) Quando usar rotação dupla?
+
+👉 Quando “entorta no meio”
+
+Exemplo:
+
+30, 10, 20
+
+Fica assim:
+
+30
+ /
+10
+  \
+   20
+
+✔️ Isso é caso LR → precisa rotação dupla
+
+🔍 Questão 7 – BFS vs DFS
+a) Estruturas
+BFS → Fila (queue)
+DFS → Pilha (stack)
+Diferença mental:
+BFS = vai por camadas (mais inteligente)
+DFS = vai fundo sem pensar muito 😅
+b) Por que BFS acha menor caminho?
+
+👉 Porque ele visita por níveis:
+
+1 passo → depois 2 → depois 3…
+
+✔️ Então o primeiro caminho encontrado é o menor.
+
+c) Por que BFS (Pinky) é melhor?
+
+👉 Porque ele:
+
+encontra o caminho mais curto
+cerca o Pac-Man mais rápido
+
+DFS pode:
+
+ir por caminhos longos
+“se perder”
+✅ Resumo final (pra prova)
+BST → esquerda menor, direita maior
+AVL → mantém equilíbrio (rotações)
+BFS → fila → menor caminho
+DFS → pilha → vai fundo
+Matriz → gasta mais memória
+Lista → melhor pra grafos esparsos
+
+
+8
+a) Passo a passo: A=0 → visita A, atualiza B=1, C=4 → visita B (menor), atualiza C=3 (via B), D=6 (via B) → visita C (menor), atualiza D=4 (via C, melhor que 6) → visita D. Final: A=0, B=1, C=3, D=4.
+b) Caminho: A→B→C→D, custo total 4.
+c) Porque Dijkstra é guloso e "fecha" vértices assumindo que a distância já é definitiva. Com peso negativo, um vértice fechado poderia ser melhorado depois, mas o algoritmo não revisita — gerando resultado errado.
+Questão 9 — Ordenação
+a) Pior caso do Quick Sort = O(n²), quando o pivô é sempre o menor/maior elemento (array já ordenado). Mitiga-se com pivô aleatório ou mediana de três.
+b) Vantagem do Heap Sort: memória O(1) (in-place) vs Merge Sort que usa O(n) extra. Merge Sort é preferido quando precisa de estabilidade (manter ordem de empates).
+c) Para 10 pontuações: Quick Sort (baixo overhead, in-place, pior caso irrelevante em n pequeno). Se estabilidade for exigida, usar Merge Sort.
+Questão 10 — BST, AVL, Grafo
+a) BST balanceada = busca/inserção O(log n); vetor exige O(n) (busca em vetor não ordenado ou deslocamento em vetor ordenado).
+b) AVL se autobalanceia, mantendo O(log n). BST comum, se inserida em ordem, degenera em lista encadeada (O(n)).
+c) Matriz = O(1) por consulta mas gasta O(V²) memória. Lista de adjacência = O(V+E), melhor para grafos esparsos como labirinto. Lista de adjacência é mais adequada pro Dijkstra, pois ele precisa iterar vizinhos repetidamente, e isso é mais barato na lista.
